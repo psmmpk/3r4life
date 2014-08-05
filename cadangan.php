@@ -71,7 +71,7 @@ include("db/config.php");
 			
 			$.ajax({
 			type: 'POST',
-			url: 'insertkomen.php',
+			url: 'http://www.ppsppa.gov.my/recycle/insertkomen.php',
 			data: $("#form1").serialize(),
 			success: function(data){
 				$('#ubah').html(data);
