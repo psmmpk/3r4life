@@ -1,0 +1,466 @@
+<?php
+	include ('config.php');
+?>
+			
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="css/jquery.mobile.min.css" rel="stylesheet" type="text/css">
+
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.mobile.min.js"></script>
+
+<link rel="stylesheet" href="css/themes/cuti3.css" />
+<link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+
+
+
+</head>
+
+<body>
+
+
+<!--PAGE UTAMA -->
+<div data-role="page" id="page_utama">
+  
+  <!--content -->
+  <div role="main" class="ui-content">
+	<center>
+	<br/>
+	<h3>EZ LEAVE APPLICATION</h3>
+	<img src="image/1.png"/>
+	<br/>
+	<a href="#page_misi" class="ui-btn ui-corner-all ui-shadow">PERMOHONAN CUTI</a>
+	<a href="#direktori" class="ui-btn ui-corner-all ui-shadow">DIREKTORI PPSPPA</a>
+	<a href="#pop1" data-rel="popup" class="ui-btn ui-corner-all ui-shadow" data-transition="slidefade">PENAFIAN</a>
+	<div data-role="popup" id="pop1" align="center" data-dismissible="false">
+	<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right"> Close</a>
+	<h3>Penafian:</h3>
+	<p>PPSPPA tidak bertanggungjawab di atas penyalahgunaan maklumat menerusi aplikasi ini</p>
+    </div>
+	<a href="#popupDialog" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-shadow">Q & A</a>
+	<div data-role="popup" id="popupDialog" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+    <div data-role="header" data-theme="a">
+    <h1>Anda tidak faham?</h1>
+    </div>
+    <div role="main" class="ui-content">
+        <h3 class="ui-title">Anda tidak faham untuk menggunakan sistem ini?</h3>
+    <p>Sila baca ManUAL PENGGUNA terlebih dahulu</p>
+        <a href="#page_manual" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b">YA</a>
+        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back" data-transition="flow">TIDAK</a>
+    </div>
+	</div>
+
+	
+  </center>
+  </div>
+
+ <!--footer -->
+  <div data-role="footer" data-position="fixed">
+  <h3>www.ppsppa.gov.my</h3>
+  </div>
+ 
+  <!--footer --> 
+  
+  
+</div>
+
+<!--PAGE PERMOHONAN CUTI -->
+
+
+
+<script>
+$( document ).ready(function(){
+//pengiraan menggunakan ajax
+	$('#hantar').click(function(){
+		$.ajax({
+			type: 'POST',
+			url: 'daftar_staff.php',<!-- in real, kena letak url server..cth : http://www.lynn.com/kuar/isi.php -->
+			data: $("#form1").serialize(),
+			success:function(data){
+				$("#ubah").html(data);
+				$("#try_ajax").popup('open');
+				}
+		});
+	});
+});
+
+</script>
+
+<div data-role="page" id="page_daftar">
+	
+	<!--content -->
+	<div role="main" class="ui-content" data-position="fixed" >
+		<center><h3>PERMOHONAN CUTI</h3></center>
+		<form id="form1">
+			
+			<div data-role="fieldcontain">
+			<label>Nama:</label>
+			<input type="text" name="nama" id="nama">
+		    </div>
+		
+			<div data-role="fieldcontain">
+			<label>No Kad Pengenalan:</label>
+			<input type="text" name="kp" id="kp">
+			</div>
+		
+			<div data-role="fieldcontain">
+			<label>Tarikh Mula:</label>
+			<input type="date" name="tarikh_mula" id="tarikh_mula">
+			</div>
+		
+			<div data-role="fieldcontain">
+			<label>Tarikh Tamat:</label>
+			<input type="date" name="tarikh_tamat" id="tarikh_tamat">
+			</div>
+			
+			<div data-role="fieldcontain">
+			<label>Jumlah Cuti:</label>
+			<input type="text" name="jumlah_cuti" id="jumlah_cuti">
+			</div>
+		
+			<div data-role="fieldcontain">
+			<label>Catatan / Sebab Bercuti:</label>
+			<textarea name="sebab_cuti" id="sebab_cuti"></textarea>
+			</div>
+			
+			<div data-role="fieldcontain">
+			<label>Nama Pengganti:</label>
+			<select name="idp" id="idp">					
+			<?php
+				$sql1=mysql_query("select id, nama from pengganti");
+				while ($row1=mysql_fetch_array($sql1)){
+					$id=$row1['id'];
+					$nama=$row1['nama'];
+					$option.="<option value='$id'>$nama</option>";
+					}
+					echo $option;
+			?>
+			</select> 
+			</div>
+			
+			<div data-role="fieldcontain">
+			<label>Nama Penyokong:</label>
+			<select name="penyokong" id="penyokong">
+			
+			<?php
+				$sql2=mysql_query("select id, nama from penyokong WHERE status ='A' order by nama");
+				while ($row2=mysql_fetch_array($sql2)){
+					$id=$row2['id'];
+					$nama=$row2'nama'];
+					$option.="<option value='$id'>$nama</option>";
+					}
+					echo $option;
+			?>
+			</select>
+			</div>
+			
+			<div data-role="fieldcontain">
+			<label>Nama Pelulus:</label>
+			<select name="pelulus" id="pelulus">
+			
+			<?php
+				$sql3=mysql_query("select id, nama from pelulus WHERE status ='A' order by nama");
+				while ($row3=mysql_fetch_array($sql3)){
+					$id=$row3['id'];
+					$nama=$row3['nama'];
+					$option.="<option value='$id'>$nama</option>";
+					}
+					echo $option;
+			?>
+			</select>
+			</div>
+
+		
+			<!-- untuk popup maklumat -->
+			<div id="try_ajax" data-role="popup" data-dismissible="false" style="max-width:400px;">
+				<div data-role="header">
+				<h3>Hasil Paparan Cuti</h3>
+				</div>
+				<div role="main" class="ui-content">
+					<div id="ubah">
+					html (data) di sini
+					</div>
+				<a href="#" class="ui-btn ui-corner-all ui-shadow" data-rel="back"> Kembali</a>
+				</div>
+			</div>
+		
+    <input type="button" id="hantar" value="SIMPAN">
+	</form>
+
+
+  </div>
+  
+   <!--footer -->
+  <div data-role="footer" data-position="fixed">
+  <div data-role="navbar">
+  <ul>
+  <li><a href="#page_utama" data-icon="home">UTAMA</a></li>
+  <li><a href="#popdatuk" data-icon="grid" class="ui-btn-active ui-state-persist">MOHON</a></li>
+  <li><a href="#direktori" data-icon="star">DIREKTORI</a></li>
+  </ul>
+  
+  
+  </div>
+  </div>
+  
+ 
+</div>
+
+
+<!--PAGE manual pengguna -->
+<div data-role="page" id="page_manual">
+  <!--content -->
+	<div role="main" class="ui-content">
+	<center>
+	<br/>
+	<h3>EZ LEAVE APPLICATION</h3>
+	<img src="image/manual.png"/>
+	<p>Manual ini di paparkan dalam bentuk salinan PDF bagi penerangan tentang setiap pergerakan
+icon dan menu yang ada di dalam sistem ini.</p>
+<p><a href="Pengguna2.pdf" data-transition="slidefade" class="ui-btn ui-btn-inline">Tidak Faham</a>
+	<a href="#page_utama" data-transition="slidedown" class="ui-btn ui-btn-inline">Faham</a></p>
+	<br/>
+	</div>
+    </center>
+
+ <!--footer -->
+  <div data-role="footer" data-position="fixed">
+  <h3>www.ppsppa.gov.my</h3>
+  </div>
+ 
+</div>
+
+
+<!--Page mohon cuti -->
+<div data-role="page" id="page_misi">
+	<!--header -->
+  <div data-role="header" data-position="fixed" data-add-back-btn="true" data-back-btn-text="Utama">
+	<h3>MOHON CUTI</h3>
+  </div>
+  
+  <!--content -->
+  
+	<center>
+	<div data-role="collapsible" data-content-theme="false">
+		<h4>CUTI REHAT</h4>
+		<p>“Cuti rehat” bermakna cuti bergaji penuh yang diberi kerana perkhidmatan yang melayakkan dalam sesuatu tahun dari
+         Januari hingga Disember.</p>
+		 <a href="#page_daftar" >MOHON CUTI</a>
+	</div>
+	<div data-role="collapsible" data-content-theme="false">
+    <h4>CUTI SAKIT</h4>
+		<p>“Cuti sakit” bermakna cuti bergaji penuh yang diberi kerana sebab-sebab perubatan dan dengan pengemukaan Sijil Sakit
+        dari seorang peg. perubatan Kerajaan atau lain-lain doktor yang diterima, dan diberi bagi sakit atau kecederaan yang ada
+        harapan untuk sembuh.</p>
+		<a href="#page_daftar" >MOHON CUTI</a>
+	</div>
+	<div data-role="collapsible" data-content-theme="false">
+		<h4>CUTI KECEMASAN</h4>
+		<p>“Cuti kecemasan” bermakna cuti bergaji penuh yang diberi kerana perkhidmatan yang melayakkan dalam sesuatu tahun dari
+         Januari hingga Disember.</p>
+		<a href="#page_daftar" >MOHON CUTI</a>
+	</div>
+	</center>
+  
+  
+  <!--footer -->
+  <div data-role="footer" data-position="fixed">
+  <div data-role="navbar">
+  <ul>
+  <li><a href="#page_utama" data-icon="home">UTAMA</a></li>
+  <li><a href="#popdatuk" data-icon="grid" class="ui-btn-active ui-state-persist">MOHON</a></li>
+  <li><a href="#direktori" data-icon="star">DIREKTORI</a></li>
+  </ul>
+  
+  
+  </div>
+  </div>
+</div>
+
+
+<!--Page direktori -->
+
+<div data-role="page" id="direktori">
+
+
+<!--panel -->
+<div data-role="panel" id="panel1" data-display="overlay">
+<h2>Sila Pilih</h2>
+</br>
+<ul data-role="listview">
+  <li><a href="#page_utama">UTAMA</a></li>
+  <li><a href="#page_misi" >MOHON</a></li>
+  <li><a href="#direktori">DIREKTORI</a></li>
+</ul>
+</div>
+
+
+<!--header -->
+  <div data-role="header" data-position="fixed" data-add-back-btn="true" data-back-btn-text="Utama">
+	<a href="#panel1" data-icon="bars" data-iconpos="notext">Menu</a>
+	<h3>LAPORAN</h3>
+	
+  </div>
+  
+  <!--content -->
+  
+	<div role="main" class="ui-content">
+	<center>
+</br>
+  <ul data-role="listview" data-filter="true" data-filter-placeholder="Taipkan Nama"><!-- class="ui-listview-outer" data-inset="true">-->
+  <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="true">
+    <h2>Pejabat KPE</h2>
+    <ul data-role="listview" data-shadow="false" data-inset="true" data-corners="false">
+      <li>
+      <a href="#popdatuk" data-rel="popup" data-transition="slideup">
+        <img src="image/datuk.jpg">
+    <h2>Ketua Pegawai Eksekutif</h2>
+    <p>Datuk Ab. Rahim b. Md. Nor</p></a>
+    <div data-role="popup" id="popdatuk">
+    <a href="tel:+60192806262" class="ui-btn ui-icon-phone ui-btn-icon-notext ui-corner-all ui-btn-inline">Telefon</a>
+    <a href="sms://+60192806262" class="ui-btn ui-icon-comment ui-btn-icon-notext ui-corner-all ui-btn-inline">SMS</a>
+    <a href="mailto:ab.rahim@swcorp.my" class="ui-btn ui-icon-mail ui-btn-icon-notext ui-corner-all ui-btn-inline">Email</a>    
+    </div>
+    </ul>
+    <ul data-role="listview" data-shadow="false" data-inset="true" data-corners="false">
+    <li>
+    <a href="#poppegkhas" data-rel="popup" data-transition="slidefade">
+        <img src="image/azrul.jpg">
+    <h2>Pegawai Khas KPE</h2>
+    <p>Mohd Azrul b. Azmi</p></a>
+    <div data-role="popup" id="poppegkhas">
+    <a href="tel:+60192806262" class="ui-btn ui-icon-phone ui-btn-icon-notext ui-corner-all ui-btn-inline">Telefon</a>
+    <a href="sms://+60192806262" class="ui-btn ui-icon-comment ui-btn-icon-notext ui-corner-all ui-btn-inline">SMS</a>
+    <a href="mailto:azrul@swcorp.my" class="ui-btn ui-icon-mail ui-btn-icon-notext ui-corner-all ui-btn-inline">Email</a>  
+    </div>
+    </ul>
+  </li>
+  </li>
+  <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="true">
+    <h2>Teknologi Maklumat</h2>
+    <ul data-role="listview" data-shadow="false" data-inset="true" data-corners="false">
+      <li>
+        <img src="image/pengit.png">
+    <h2>Pengarah</h2>
+    <p>Aznul Nizam b. Nasir</p></a>
+    <p>
+    <a href="tel:+60192806262" class="ui-btn ui-icon-phone ui-btn-icon-notext ui-corner-all ui-btn-inline">Telefon</a>
+    <a href="sms://+60192806262" class="ui-btn ui-icon-comment ui-btn-icon-notext ui-corner-all ui-btn-inline">SMS</a>
+    <a href="mailto:aznul@swcorp.my" class="ui-btn ui-icon-mail ui-btn-icon-notext ui-corner-all ui-btn-inline">Email</a>
+    </p>
+    </ul>
+    <ul data-role="listview" data-shadow="false" data-inset="true" data-corners="false">
+    <li>
+        <img src="image/tpit.jpg">
+    <h2>Timbalan Pengarah</h2>
+    <p>Aida Suziliana bt. Salim</p></a>
+    <p>
+    <a href="tel:+60174948654" class="ui-btn ui-icon-phone ui-btn-icon-notext ui-corner-all ui-btn-inline">Telefon</a>
+    <a href="sms://+60174948654" class="ui-btn ui-icon-comment ui-btn-icon-notext ui-corner-all ui-btn-inline">SMS</a>
+    <a href="mailto:aida@swcorp.my" class="ui-btn ui-icon-mail ui-btn-icon-notext ui-corner-all ui-btn-inline">Email</a>
+    </p>
+    </ul>
+   
+   <li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="true">
+    <h2>Korporat dan Perhubungan Awam</h2>
+    <ul data-role="listview" data-shadow="false" data-inset="true" data-corners="false">
+      <li>
+        <img src="image/zainal.png">
+    <h2>Pengarah</h2>
+    <p>ZAINAL FITRI BIN HJ. AHMAD</p></a>
+    <p>
+    <a href="tel:+60192806262" class="ui-btn ui-icon-phone ui-btn-icon-notext ui-corner-all ui-btn-inline">Telefon</a>
+    <a href="sms://+60192806262" class="ui-btn ui-icon-comment ui-btn-icon-notext ui-corner-all ui-btn-inline">SMS</a>
+    <a href="mailto:zainal.fitri@swcorp.my" class="ui-btn ui-icon-mail ui-btn-icon-notext ui-corner-all ui-btn-inline">Email</a>
+    </p>
+    </ul>
+    <ul data-role="listview" data-shadow="false" data-inset="true" data-corners="false">
+    <li>
+        <img src="image/sumatra.jpg">
+    <h2>Timbalan Pengarah</h2>
+    <p>SUMATRA A/P APPAVOO</p></a>
+    <p>
+    <a href="tel:+60174948654" class="ui-btn ui-icon-phone ui-btn-icon-notext ui-corner-all ui-btn-inline">Telefon</a>
+    <a href="sms://+60174948654" class="ui-btn ui-icon-comment ui-btn-icon-notext ui-corner-all ui-btn-inline">SMS</a>
+    <a href="mailto:sumatra@swcorp.my" class="ui-btn ui-icon-mail ui-btn-icon-notext ui-corner-all ui-btn-inline">Email</a>
+    </p>
+    </ul>
+	</li>
+	
+	<li data-role="collapsible" data-iconpos="right" data-shadow="false" data-corners="true">
+    <h2>Kewangan dan Perolehan</h2>
+    <ul data-role="listview" data-shadow="false" data-inset="true" data-corners="false">
+      <li>
+      <a href="#popummi" data-rel="popup" data-transition="slideup">
+        <img src="image/ummi.jpg">
+    <h2>Pengarah</h2>
+    <p>Ummi Kalthum Binti Shuib</p></a>
+    <div data-role="popup" id="popummi">
+    <a href="tel:+60192806262" class="ui-btn ui-icon-phone ui-btn-icon-notext ui-corner-all ui-btn-inline">Telefon</a>
+    <a href="sms://+60192806262" class="ui-btn ui-icon-comment ui-btn-icon-notext ui-corner-all ui-btn-inline">SMS</a>
+    <a href="mailto:ummi@swcorp.my" class="ui-btn ui-icon-mail ui-btn-icon-notext ui-corner-all ui-btn-inline">Email</a>    
+    </div>
+    </ul>
+    <ul data-role="listview" data-shadow="false" data-inset="true" data-corners="false">
+    <li>
+    <a href="#poppegkhas" data-rel="popup" data-transition="slidefade">
+        <img src="image/fifah.jpg">
+    <h2>Pembantu Setiausaha Pejabat</h2>
+    <p>	Cik Norafifah Binti Ayub</p></a>
+    <div data-role="popup" id="fifah">
+    <a href="tel:+60192806262" class="ui-btn ui-icon-phone ui-btn-icon-notext ui-corner-all ui-btn-inline">Telefon</a>
+    <a href="sms://+60192806262" class="ui-btn ui-icon-comment ui-btn-icon-notext ui-corner-all ui-btn-inline">SMS</a>
+    <a href="mailto:fifah@swcorp.my" class="ui-btn ui-icon-mail ui-btn-icon-notext ui-corner-all ui-btn-inline">Email</a>  
+    </div>
+    </ul>
+  </li>
+  </li>
+	</center>
+  </div>
+  
+  
+  <!--footer -->
+  <div data-role="footer" data-position="fixed">
+  <div data-role="navbar">
+  <ul>
+  <li><a href="#page_utama" data-icon="home">UTAMA</a></li>
+  <li><a href="#page_misi" data-icon="grid" class="ui-btn-active ui-state-persist">MOHON</a></li>
+  <li><a href="#direktori" data-icon="star">DIREKTORI</a></li>
+  </ul>
+  
+  
+  </div>
+  </div>
+</div>
+
+
+
+<!--Page Cari -->
+<div data-role="page" id="page_cari">
+	<!--header -->
+  <div data-role="header" data-position="fixed">
+	<h3>LAPORAN</h3>
+	
+  </div>
+  
+  <!--content -->
+ 
+	<center>
+	<br/>
+	<h3>SEARCH</h3>
+	
+	</center>
+
+  
+  
+
+</div>
+
+
+</body>
+</html>
